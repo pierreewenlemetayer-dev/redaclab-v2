@@ -64,7 +64,7 @@ function sentenceParts(text){
 function sentenceUnits(text){
  const normalized=text.toLocaleLowerCase('fr').replace(apostrophes,"'");
  const units=[];
- for(const match of normalized.matchAll(/[\\p{L}]+(?:[-'][\\p{L}]+)*/gu)){
+ for(const match of normalized.matchAll(/[\p{L}]+(?:[-'][\p{L}]+)*/gu)){
   const token=match[0],parts=(entries[token]||excluded.has(token))?[token]:token.split("'");
   let offset=0;
   for(const part of parts){
@@ -89,7 +89,7 @@ function renderSentenceTable(original){
  if(!phrases.length){tbody.innerHTML='<tr><td colspan="3" class="sentence-empty">Saisissez un texte pour afficher les phrases.</td></tr>';return;}
  phrases.forEach((phrase,i)=>{
   const tr=document.createElement('tr'),number=document.createElement('td'),content=document.createElement('td'),actions=document.createElement('td');
-  number.className='sentence-count';number.textContent=(phrase.match(/[\\p{L}]+(?:[-'][\\p{L}]+)*/gu)||[]).length;
+  number.className='sentence-count';number.textContent=(phrase.match(/[\p{L}]+(?:[-'][\p{L}]+)*/gu)||[]).length;
   content.className='sentence-content';
   const mode=sentenceModes[i]||'';
   const units=sentenceUnits(phrase);
