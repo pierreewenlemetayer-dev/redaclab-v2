@@ -132,7 +132,7 @@ button:hover{background:var(--accent-fonce);border-color:var(--accent-fonce)}
 
 /* Disposition Redac Lab : objectifs à gauche, texte au centre, statistiques à droite. */
 :root{--fond:#f1f7fb;--papier:#fcfeff;--texte:#24313a;--secondaire:#667985;--accent:#6b9fbd;--accent-fonce:#477f9f;--accent-pale:#dcecf5;--bordure:#d1e0e8;--ombre:0 8px 25px rgba(45,75,95,.08)}
-h1{color:var(--texte)}
+h1{color:#477f9f}
 .subtitle{color:var(--secondaire)}
 .workspace{grid-template-columns:205px minmax(0,1fr) 235px;gap:18px;align-items:start}
 .goals-sidebar{padding:0;background:transparent;box-shadow:none;border:0}
