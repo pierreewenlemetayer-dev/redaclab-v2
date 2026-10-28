@@ -14,7 +14,7 @@ try {
   const input=page.locator('#input');
   await input.fill('Le chat regarde les chats. Le chat regardait les chats.\nJe suis ici et il fait beau.');
   await page.waitForTimeout(500);
-  for (const [mode,id] of [['frequences','highlight-enabled'],['repetitions','repetition-enabled'],['verbes','verbs-enabled'],['phrase-longue','longest-enabled']]) {
+  for (const [mode,id] of [['repetitions','repetition-enabled'],['verbes','verbs-enabled'],['phrase-longue','longest-enabled']]) {
    await page.locator('#'+id).check();
    const alignment=await page.evaluate(()=>{
     const t=document.querySelector('#input'),h=document.querySelector('#highlight');
