@@ -274,3 +274,14 @@ h1{color:var(--texte)}
 #redac-stats p:nth-child(-n+3){line-height:1.5}
 #redac-stats p:nth-child(-n+3) strong{display:inline-block;margin-left:0}
 #redac-stats p:nth-child(-n+3)::first-line{font-weight:400}
+
+/* Valeur et feu ensemble sur une deuxième ligne, sans réduire la police. */
+#redac-stats p:nth-child(-n+3) .stat-value{
+ display:flex;
+ align-items:center;
+ justify-content:flex-start;
+ gap:6px;
+ white-space:nowrap;
+ font-size:14px;
+ margin-top:2px;
+}
