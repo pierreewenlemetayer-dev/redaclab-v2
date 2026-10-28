@@ -12,6 +12,7 @@ try {
  assert.equal(await page.locator('.goals-sidebar').count(),1,'Objectifs à gauche');
  assert.equal(await page.locator('.stats-sidebar').count(),1,'Statistiques à droite');
  assert.equal(await page.locator('.redac-links a').count(),2,'Liens Lañs et Leien');
+ assert.equal(await page.locator('.sentence-table th').allTextContents().then(x=>x.join('|')),'Mots|Phrase|Analyse','Colonnes du tableau inversées');
  assert.equal(await page.locator('.side-card a').count(),2,'Liens synonymes et orthographe');
  assert.equal(await page.locator('.about').count(),0,'Section À propos supprimée');
  assert.equal(await page.locator('.editor-actions #print').count(),1,'PDF sous le cadre');
@@ -19,6 +20,17 @@ try {
  assert.equal(await page.locator('.editor #print').count(),0,'Pas de bouton PDF dans le cadre');
  const columns=await page.evaluate(()=>{const ids=['.goals-sidebar','.editor','.stats-sidebar'];return ids.map(x=>document.querySelector(x).getBoundingClientRect().left)});
  assert.ok(columns[0]<columns[1]&&columns[1]<columns[2],'Ordre des trois colonnes');
+ await input.fill('Le chat regarde les chats. Le chat regardait les chats.');
+ await page.waitForTimeout(500);
+ assert.equal(await page.locator('#sentence-rows tr').count(),2,'Une ligne par phrase');
+ await page.locator('#sentence-rows tr').first().locator('input').first().check();
+ assert.ok(await page.locator('#sentence-rows tr').first().locator('.sentence-mark').count()>0,'Fréquences dans le tableau');
+ await page.locator('#sentence-rows tr').first().locator('input').nth(1).check();
+ assert.equal(await page.locator('#sentence-rows tr').first().locator('input').first().isChecked(),false,'Modes exclusifs par ligne');
+ assert.equal(await page.locator('#highlight').locator('.freq-common').count(),0,'Pas de fréquence dans le texte principal');
+ await input.fill('Le chat regarde les chats. Le chat regarde encore les chats.');
+ await page.waitForTimeout(500);
+ assert.equal(await page.locator('#sentence-rows tr').first().locator('input').nth(1).isChecked(),true,'Sélection conservée après réécriture');
  await input.fill('Le chat regarde les chats. Le chat regardait les chats.');
  await page.waitForTimeout(500);
  assert.equal(await page.locator('#repetitions').textContent(),'6','Le total exclut les articles et conserve les autres répétitions');
