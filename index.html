@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redac Lab v2 — Outil d’écriture</title>
+<link rel="stylesheet" href="css/style.css?v=20261028-5"></head>
+<body>
+<header><h1>Redac Lab v2</h1><p class="subtitle">Outil d’écriture — prototype indépendant</p></header>
+<main><div class="workspace">
+<aside class="panel sidebar" aria-label="Objectifs et statistiques"><div class="eyebrow">Objectifs</div>
+<label>Nombre de mots min. <input type="number" id="objMots" value="300"></label>
+<label>Moyenne de mots max. <input type="number" id="objMoyenne" value="21"></label>
+<label>Diversité lexicale min. (%) <input type="number" id="objDensite" value="55"></label>
+<div class="diversity-block"><div class="eyebrow">Statistiques</div><div id="redac-stats" aria-live="polite">
+<p>Mots : <strong id="mots">0</strong> <span id="motsCouleur"></span></p>
+<p>Moyenne mots / phrase : <strong id="moyenne">0</strong> <span id="moyenneCouleur"></span></p>
+<p>Diversité lexicale : <strong id="diversity-score">—</strong> <span id="densiteCouleur"></span></p>
+<p>Paragraphes : <strong id="paragraphes">0</strong></p><p>Phrases : <strong id="phrases">0</strong></p>
+<p>Phrase la plus longue : <strong id="longue">0</strong></p>
+<p>Verbes ternes : <strong id="verbes">0</strong></p><p>Répétitions : <strong id="repetitions">0</strong></p>
+</div></div></aside><section class="panel editor"><label for="input" class="sr-only">Texte à analyser</label>
+<div class="student-row"><label for="nom">Élève :</label><input id="nom" placeholder="Nom"><button id="save">Sauvegarder</button><button id="load">Charger</button></div><div class="text-layer"><div id="word-tooltip" class="word-tooltip" role="tooltip" hidden></div><div id="highlight" class="highlight" aria-hidden="true"></div><textarea id="input" spellcheck="false" placeholder="Saisissez ou collez votre texte ici…"></textarea></div><div class="highlight-controls"><div class="highlight-toggles"><label class="highlight-toggle"><input type="checkbox" id="highlight-enabled" checked> Afficher les fréquences</label><label class="highlight-toggle"><input type="checkbox" id="repetition-enabled"> Afficher les répétitions</label><label class="highlight-toggle"><input type="checkbox" id="verbs-enabled"> Afficher les verbes ternes</label><label class="highlight-toggle"><input type="checkbox" id="longest-enabled"> Souligner la phrase la plus longue</label></div><div class="frequency-legend" aria-label="Légende des fréquences"><span><i class="freq-very-common"></i> Très fréquents</span><span><i class="freq-common"></i> Fréquents</span><span><i class="freq-uncommon"></i> Peu fréquents</span><span><i class="freq-rare"></i> Rares</span></div></div>
+
+<button id="print" class="print-button">Imprimer / enregistrer en PDF</button></section></div>
+<details class="about panel"><summary>À propos</summary><div class="about-content"><p>Prototype indépendant de Redac Lab. La diversité lexicale et les répétitions utilisent les unités lexicales reconnues par Lexique 4, regroupées par lemme et catégorie grammaticale. Les formes inconnues et exclues sont comparées sous leur forme normalisée. Le compteur de répétitions additionne toutes les occurrences des groupes répétés, y compris leur première apparition.</p><p>Les verbes ternes sont repérés à partir de la liste de formes de Redac Lab, sans désambiguïsation contextuelle. Les quatre modes visuels sont exclusifs.</p></div></details>
+<footer class="site-footer">© Redac Lab – Pierre Lemétayer – 2026</footer>
+<div class="hidden-diagnostics" aria-hidden="true">
+<span id="score"></span><span id="marker"></span><span id="raw-index"></span><span id="lemmas"></span><span id="coverage"></span><span id="detail"></span>
+<table><tbody id="table"></tbody></table><span id="uniques"></span>
+</div></main>
+<script src="js/app.js?v=20261028-5"></script>
+<script>fetch("data/lexique.json").then(r=>{if(!r.ok)throw Error("Dictionnaire indisponible");return r.json()}).then(demarrerLexiLab).catch(e=>{console.error(e);const note=document.getElementById("gauge-note");note.hidden=false;note.textContent="Le dictionnaire lexical du prototype est indisponible."})</script></body></html>
