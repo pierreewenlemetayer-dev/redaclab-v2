@@ -23,6 +23,7 @@ function analyze(){
  const diversite=unitesDiversite.length?new Set(unitesDiversite).size/unitesDiversite.length*100:0;
  document.getElementById('diversity-score').textContent=unitesDiversite.length?diversite.toLocaleString('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1})+' %':'—';
  updateRedacStats(original,diversite);
+ renderSentenceTable(original);
  const raw=original.toLocaleLowerCase('fr').replace(apostrophes,"'");
  const tokens=raw.match(/[\p{L}]+(?:[-'][\p{L}]+)*/gu)||[];
  const records=[], unknown=[], dropped=[];const unique=new Map();
@@ -53,6 +54,64 @@ function analyze(){
  document.getElementById('detail').textContent=`${tokens.length} unités initiales · ${records.length} unités après séparation des apostrophes · ${dropped.length} exclusions · ${unknown.length} non reconnues`;
  document.getElementById('table').innerHTML=records.map(x=>`<tr><td>${esc(x.form)}</td><td>${esc(x.status)}</td><td>${esc(x.lemma)}</td><td>${esc(x.pos)}</td><td class="num">${x.freq===null?'':fmt(x.freq)}</td></tr>`).join('');
  document.getElementById('uniques').textContent=items.sort((a,b)=>a.lemma.localeCompare(b.lemma,'fr')).map(x=>`${x.lemma} (${x.pos})`).join(' · ')||'—';
+}
+
+const sentenceModes=[];
+function sentenceParts(text){
+ // Conserver les ponctuations et les fins de phrases sans perdre les retours à la ligne.
+ return [...text.matchAll(/[^.!?]+(?:[.!?]+|$)/g)].map(m=>m[0].trim()).filter(Boolean);
+}
+function sentenceUnits(text){
+ const normalized=text.toLocaleLowerCase('fr').replace(apostrophes,"'");
+ const units=[];
+ for(const match of normalized.matchAll(/[\\p{L}]+(?:[-'][\\p{L}]+)*/gu)){
+  const token=match[0],parts=(entries[token]||excluded.has(token))?[token]:token.split("'");
+  let offset=0;
+  for(const part of parts){
+   if(!part)continue;
+   const index=token.indexOf(part,offset);if(index<0)continue;
+   const hit=excluded.has(part)?null:entries[part];
+   const freq=hit?Number(hit[2]):NaN;
+   units.push({start:match.index+index,end:match.index+index+part.length,key:hit?'lemme:'+hit[0]+'|'+hit[1]:'forme:'+part,excluded:repetitionExcluded.has(part),frequencyClass:Number.isFinite(freq)&&freq>0?(freq>=100?'freq-very-common':freq>=10?'freq-common':freq>=1?'freq-uncommon':'freq-rare'):''});
+   offset=index+part.length;
+  }
+ }
+ return units;
+}
+function renderSentenceTable(original){
+ const tbody=document.getElementById('sentence-rows');if(!tbody)return;
+ const phrases=sentenceParts(original);
+ const allUnits=sentenceUnits(original),counts=new Map();
+ for(const unit of allUnits)if(!unit.excluded)counts.set(unit.key,(counts.get(unit.key)||0)+1);
+ const repeated=[...counts].filter(([,n])=>n>1).map(([k])=>k);
+ const colors=new Map(repeated.map((key,i)=>[key,i%16]));
+ tbody.replaceChildren();
+ if(!phrases.length){tbody.innerHTML='<tr><td colspan="3" class="sentence-empty">Saisissez un texte pour afficher les phrases.</td></tr>';return;}
+ phrases.forEach((phrase,i)=>{
+  const tr=document.createElement('tr'),number=document.createElement('td'),content=document.createElement('td'),actions=document.createElement('td');
+  number.className='sentence-count';number.textContent=(phrase.match(/[\\p{L}]+(?:[-'][\\p{L}]+)*/gu)||[]).length;
+  content.className='sentence-content';
+  const mode=sentenceModes[i]||'';
+  const units=sentenceUnits(phrase);
+  let html='',last=0;
+  const labels={'freq-very-common':'Mot très courant','freq-common':'Mot courant','freq-uncommon':'Mot rare','freq-rare':'Mot très rare'};
+  for(const unit of units){
+   html+=esc(phrase.slice(last,unit.start));
+   const cls=mode==='vocab'?unit.frequencyClass:mode==='repeat'&&!unit.excluded&&counts.get(unit.key)>1?'repeat-color-'+colors.get(unit.key):'';
+   const word=esc(phrase.slice(unit.start,unit.end));
+   html+=cls?'<span class="sentence-mark '+cls+'"'+(mode==='vocab'?' title="'+labels[cls]+'"':'')+'>'+word+'</span>':word;
+   last=unit.end;
+  }
+  content.innerHTML=html+esc(phrase.slice(last));
+  actions.className='sentence-actions';
+  for(const [value,label] of [['vocab','Richesse du vocabulaire'],['repeat','Répétitions']]){
+   const wrap=document.createElement('label'),checkbox=document.createElement('input');
+   checkbox.type='checkbox';checkbox.checked=mode===value;checkbox.setAttribute('aria-label',label+' — phrase '+(i+1));
+   checkbox.addEventListener('change',()=>{sentenceModes[i]=checkbox.checked?value:'';renderSentenceTable(document.getElementById('input').value);});
+   wrap.append(checkbox,document.createTextNode(' '+label));actions.append(wrap);
+  }
+  tr.append(number,content,actions);tbody.append(tr);
+ });
 }
 function updateRedacStats(original,diversite){
  const words=original.trim()?original.trim().split(/\s+/):[];
