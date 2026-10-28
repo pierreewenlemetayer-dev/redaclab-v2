@@ -12,9 +12,16 @@ try {
  await input.fill('Le chat regarde les chats. Le chat regardait les chats.');
  await page.waitForTimeout(500);
  assert.equal(await page.locator('#repetitions').textContent(),'4','Le regroupement lexical doit compter les quatre occurrences de chat/chats');
+ await input.fill(Array(15).fill('chat').concat(Array(30).fill('maison')).join(' ') + '.');
+ await page.waitForTimeout(500);
+ assert.equal(await page.locator('#repetitions').textContent(),'45','15 + 30 occurrences répétées doivent donner 45');
+ await input.fill('Le chat regarde les chats. Le chat regardait les chats.');
+ await page.waitForTimeout(500);
  await page.locator('#repetition-enabled').check();
  assert.equal(await page.locator('#highlight-enabled').isChecked(),false,'Modes exclusifs');
  assert.equal(await page.locator('#highlight [data-repeat-key]').count(),4,'Les quatre occurrences doivent être colorées');
+ await page.locator('#repetition-enabled').uncheck();
+ assert.equal(await page.locator('#highlight').isHidden(),true,'Tous les modes peuvent être désactivés');
  await page.locator('#verbs-enabled').check();
  assert.equal(await page.locator('#repetition-enabled').isChecked(),false,'Le mode verbes remplace répétitions');
  await input.fill('Je suis ici. Tu es là. Il fait beau.');
@@ -31,6 +38,9 @@ try {
  page.once('dialog',d=>d.accept());
  await page.locator('#load').click();
  assert.equal(await input.inputValue(),'Je suis ici. Tu es là. Il fait beau.','Sauvegarde et chargement');
+ await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));
+ assert.equal(await page.locator('#print-text').textContent(),await input.inputValue(),'Le document imprimable contient le texte intégral');
+ assert.match(await page.locator('#print-stats').textContent(),/Répétitions/,'Les statistiques sont préparées pour impression');
  assert.deepEqual(errors,[],'Aucune erreur JavaScript');
- console.log('OK : répétitions, modes exclusifs, verbes ternes, phrase longue, sauvegarde.');
+ console.log('OK : 45 occurrences, modes exclusifs, désactivation, verbes ternes, phrase longue, sauvegarde et impression.');
 } finally {await browser.close();}
