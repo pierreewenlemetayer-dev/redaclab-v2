@@ -1,0 +1,33 @@
+name: Installer le dictionnaire Lexique 4
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/install-lexique.yml'
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Récupérer la copie autonome du dictionnaire validé
+        run: |
+          mkdir -p data
+          curl --fail --location --retry 3 --output data/lexique.json 'https://raw.githubusercontent.com/pierreewenlemetayer-dev/lexilab/reference-validee-2026-10-28/data/lexique.json'
+          python3 - <<'PY'
+          import json
+          with open('data/lexique.json',encoding='utf-8') as f: d=json.load(f)
+          assert len(d['entries']) >= 170000, 'Dictionnaire incomplet'
+          assert len(d['excluded']) >= 300, 'Exclusions incomplètes'
+          print('Entrées:',len(d['entries']),'Exclusions:',len(d['excluded']))
+          PY
+      - name: Enregistrer le dictionnaire dans ce dépôt
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/lexique.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Installer la copie autonome du dictionnaire Lexique 4"
+            git push
+          fi
