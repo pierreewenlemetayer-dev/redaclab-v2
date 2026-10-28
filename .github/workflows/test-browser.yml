@@ -36,6 +36,19 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/redac-server.log 2>&1 &
           node tests/verification.mjs
           node tests/visuel.mjs
+      - name: Comparer avec la version validée de Lexi Lab
+        run: |
+          mkdir -p /tmp/lexilab-reference
+          curl --fail --location --retry 3 -o /tmp/lexilab-reference/index.html 'https://raw.githubusercontent.com/pierreewenlemetayer-dev/lexilab/reference-validee-2026-10-28/index.html'
+          mkdir -p /tmp/lexilab-reference/js /tmp/lexilab-reference/css /tmp/lexilab-reference/data
+          curl --fail --location --retry 3 -o /tmp/lexilab-reference/js/app.js 'https://raw.githubusercontent.com/pierreewenlemetayer-dev/lexilab/reference-validee-2026-10-28/js/app.js'
+          curl --fail --location --retry 3 -o /tmp/lexilab-reference/css/style.css 'https://raw.githubusercontent.com/pierreewenlemetayer-dev/lexilab/reference-validee-2026-10-28/css/style.css'
+          cp data/lexique.json /tmp/lexilab-reference/data/lexique.json
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/redac-server.log 2>&1 &
+          cd /tmp/lexilab-reference
+          python3 -m http.server 8766 --bind 127.0.0.1 >/tmp/lexi-server.log 2>&1 &
+          cd - >/dev/null
+          node tests/comparaison-lexilab.mjs
       - name: Conserver les captures et les PDF
         if: always()
         uses: actions/upload-artifact@v4
