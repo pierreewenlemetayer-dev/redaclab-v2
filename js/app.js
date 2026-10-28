@@ -2,7 +2,8 @@ function demarrerLexiLab(LEXICON){
 let hoveredRepeatKey=null;
 const entries=LEXICON.entries, excluded=new Set(LEXICON.excluded);
 const apostrophes=/[’‘`´]/g;
-const dullForms=new Set('suis es est sommes etes sont étais était étions étiez étaient serai seras sera serons serez seront fus fut fûmes fûtes furent ai as a avons avez ont avais avait avions aviez avaient aurai auras aura aurons aurez auront eus eut eûmes eûtes eurent fais fait faisons faites font faisais faisait faisions faisiez faisaient ferai feras fera ferons ferez feront fis fit fîmes fîtes firent dis dit disons dites disent disais disait disions disiez disaient dirai diras dira dirons direz diront dîmes dîtes dirent'.split(' '));
+const repetitionExcluded=new Set(['le','la','les','l','un','une','des']);
+const dullForms=new Set('être avoir faire dire suis es est sommes etes sont étais était étions étiez étaient serai seras sera serons serez seront fus fut fûmes fûtes furent ai as a avons avez ont avais avait avions aviez avaient aurai auras aura aurons aurez auront eus eut eûmes eûtes eurent fais fait faisons faites font faisais faisait faisions faisiez faisaient ferai feras fera ferons ferez feront fis fit fîmes fîtes firent dis dit disons dites disent disais disait disions disiez disaient dirai diras dira dirons direz diront dîmes dîtes dirent'.split(' '));
 
 function analyze(){
  const original=document.getElementById('input').value;
@@ -58,7 +59,7 @@ function updateRedacStats(original,diversite){
  const sentences=original.split(/[.!?]+/).filter(x=>x.trim());
  const avg=sentences.length?words.length/sentences.length:0;
  const max=Math.max(0,...sentences.map(x=>x.trim().split(/\s+/).filter(Boolean).length));
- const dull=words.filter(w=>dullForms.has(w.toLocaleLowerCase('fr'))).length;
+ const dull=(original.toLocaleLowerCase('fr').match(/[\p{L}]+(?:[-'][\p{L}]+)*/gu)||[]).filter(w=>dullForms.has(w)).length;
  const set=(id,v)=>document.getElementById(id).textContent=v;
  set('mots',words.length);set('moyenne',avg.toFixed(1));set('paragraphes',original.split(/\n+/).filter(x=>x.trim()).length);
  set('phrases',sentences.length);set('longue',max);set('verbes',dull);
@@ -84,14 +85,14 @@ function renderHighlights(original){
      const key=hit?'lemme:'+hit[0]+'|'+hit[1]:'forme:'+part;
      const freq=hit?Number(hit[2]):NaN;
      const frequencyClass=Number.isFinite(freq)&&freq>0?(freq>=100?'freq-very-common':freq>=10?'freq-common':freq>=1?'freq-uncommon':'freq-rare'):'';
-     units.push({start:match.index+index,end:match.index+index+part.length,key,frequencyClass});
+     units.push({start:match.index+index,end:match.index+index+part.length,key,frequencyClass,excludeRepetition:repetitionExcluded.has(part)});
      offset=index+part.length;
    }
  }
  const counts=new Map();
- for(const unit of units)counts.set(unit.key,(counts.get(unit.key)||0)+1);
+ for(const unit of units)if(!unit.excludeRepetition)counts.set(unit.key,(counts.get(unit.key)||0)+1);
  const mode=document.getElementById('repetition-enabled').checked?'repetition':document.getElementById('verbs-enabled').checked?'verbs':document.getElementById('longest-enabled').checked?'longest':document.getElementById('highlight-enabled').checked?'frequency':'none';
- document.getElementById('repetitions').textContent=units.filter(unit=>counts.get(unit.key)>1).length;
+ document.getElementById('repetitions').textContent=units.filter(unit=>!unit.excludeRepetition&&counts.get(unit.key)>1).length;
  const sentences=[...original.matchAll(/[^.!?]+(?:[.!?]+|$)/g)].filter(m=>m[0].trim());
  let longest=null,longestCount=0;
  for(const m of sentences){const n=(m[0].match(/[\p{L}]+(?:[-'][\p{L}]+)*/gu)||[]).length;if(n>longestCount){longest=m;longestCount=n;}}
@@ -100,7 +101,7 @@ function renderHighlights(original){
  let result='',last=0;
  for(const unit of units){
    result+=esc(original.slice(last,unit.start));
-   const cls=mode==='repetition'?(counts.get(unit.key)>1?'repeat-color-'+colorByKey.get(unit.key):''):mode==='verbs'?(dullForms.has(normalized.slice(unit.start,unit.end))?'dull-verb':''):mode==='frequency'?unit.frequencyClass:'';
+   const cls=mode==='repetition'?(!unit.excludeRepetition&&counts.get(unit.key)>1?'repeat-color-'+colorByKey.get(unit.key):''):mode==='verbs'?(dullForms.has(normalized.slice(unit.start,unit.end))?'dull-verb':''):mode==='frequency'?unit.frequencyClass:'';
    const visible=esc(original.slice(unit.start,unit.end));
    result+=cls?'<span class="'+cls+'"'+(mode==='frequency'?' data-frequency="'+(cls==='freq-very-common'?'Très fréquent':cls==='freq-common'?'Fréquent':cls==='freq-uncommon'?'Peu fréquent':'Rare')+'"':' data-repeat-key="'+esc(unit.key)+'"')+'>'+visible+'</span>':visible;
    last=unit.end;
