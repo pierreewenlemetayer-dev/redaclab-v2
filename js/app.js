@@ -3,7 +3,7 @@ let hoveredRepeatKey=null;
 const entries=LEXICON.entries, excluded=new Set(LEXICON.excluded);
 const apostrophes=/[’‘`´]/g;
 const dullForms=new Set('suis es est sommes etes sont étais était étions étiez étaient serai seras sera serons serez seront fus fut fûmes fûtes furent ai as a avons avez ont avais avait avions aviez avaient aurai auras aura aurons aurez auront eus eut eûmes eûtes eurent fais fait faisons faites font faisais faisait faisions faisiez faisaient ferai feras fera ferons ferez feront fis fit fîmes fîtes firent dis dit disons dites disent disais disait disions disiez disaient dirai diras dira dirons direz diront dîmes dîtes dirent'.split(' '));
-const tokenize=s=>s.match(/[\\p{L}]+(?:[-'][\\p{L}]+)*/gu)||[];
+const tokenize=s=>s.match(/[\p{L}]+(?:[-'][\p{L}]+)*/gu)||[];
 function analyze(){
  const original=document.getElementById('input').value;
  renderHighlights(original);
@@ -60,7 +60,7 @@ function updateRedacStats(original,diversite){
  const max=Math.max(0,...sentences.map(x=>x.trim().split(/\\s+/).filter(Boolean).length));
  const dull=words.filter(w=>dullForms.has(w.toLocaleLowerCase('fr'))).length;
  const set=(id,v)=>document.getElementById(id).textContent=v;
- set('mots',words.length);set('moyenne',avg.toFixed(1));set('paragraphes',original.split(/\\n+/).filter(x=>x.trim()).length);
+ set('mots',words.length);set('moyenne',avg.toFixed(1));set('paragraphes',original.split(/\n+/).filter(x=>x.trim()).length);
  set('phrases',sentences.length);set('longue',max);set('verbes',dull);
  const color=(v,target,min)=>min?(v>=target?'🟢':v>=target*.8?'🟠':'🔴'):(v<=target?'🟢':v<=target*1.2?'🟠':'🔴');
  set('motsCouleur',color(words.length,Number(document.getElementById('objMots').value),true));
@@ -90,11 +90,11 @@ function renderHighlights(original){
  }
  const counts=new Map();
  for(const unit of units)counts.set(unit.key,(counts.get(unit.key)||0)+1);
- const mode=document.getElementById('repetition-enabled').checked?'repetition':document.getElementById('verbs-enabled').checked?'verbs':document.getElementById('longest-enabled').checked?'longest':'frequency';
+ const mode=document.getElementById('repetition-enabled').checked?'repetition':document.getElementById('verbs-enabled').checked?'verbs':document.getElementById('longest-enabled').checked?'longest':document.getElementById('highlight-enabled').checked?'frequency':'none';
  document.getElementById('repetitions').textContent=units.filter(unit=>counts.get(unit.key)>1).length;
  const sentences=[...original.matchAll(/[^.!?]+(?:[.!?]+|$)/g)].filter(m=>m[0].trim());
  let longest=null,longestCount=0;
- for(const m of sentences){const n=(m[0].match(/[\\p{L}]+(?:[-'][\\p{L}]+)*/gu)||[]).length;if(n>longestCount){longest=m;longestCount=n;}}
+ for(const m of sentences){const n=(m[0].match(/[\p{L}]+(?:[-'][\p{L}]+)*/gu)||[]).length;if(n>longestCount){longest=m;longestCount=n;}}
  const repeatedKeys=[...counts].filter(([,count])=>count>1).map(([key])=>key);
  const colorByKey=new Map(repeatedKeys.map((key,index)=>[key,index%16]));
  let result='',last=0;
@@ -184,11 +184,11 @@ let pending; input.addEventListener('input',()=>{
  // Ne jamais masquer le texte tant que le calque n'a pas été actualisé.
  input.classList.remove('highlight-on');
  pending=setTimeout(()=>{try{analyze();updateMode();}catch(error){console.error(error);input.classList.remove('highlight-on');}
+},220);
+});
+try{analyze();updateMode();}catch(error){console.error(error);input.classList.remove('highlight-on');}
 document.querySelectorAll('.sidebar input').forEach(el=>el.addEventListener('input',()=>analyze()));
 document.getElementById('save').addEventListener('click',()=>{const name=document.getElementById('nom').value.trim();if(!name){alert('Entre ton nom');return;}localStorage.setItem('redac_v2_'+name,input.value);alert('Texte sauvegardé !');});
 document.getElementById('load').addEventListener('click',()=>{const name=document.getElementById('nom').value.trim();const saved=localStorage.getItem('redac_v2_'+name);if(saved===null){alert('Aucun texte trouvé');return;}input.value=saved;analyze();updateMode();});
-document.getElementById('print').addEventListener('click',()=>window.print());},220);
-});
-try{analyze();updateMode();}catch(error){console.error(error);input.classList.remove('highlight-on');}
-
+document.getElementById('print').addEventListener('click',()=>window.print());
 }
