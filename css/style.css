@@ -222,3 +222,10 @@ h1{color:var(--texte)}
 @media(min-width:541px) and (max-width:800px){
  .highlight-toggles{flex-wrap:wrap;justify-content:center}
 }
+
+/* Colonne des statistiques encore affinée ; l'espace gagné va au texte. */
+@media(min-width:1051px){
+ .workspace{grid-template-columns:205px minmax(0,1fr) 240px}
+ .stats-sidebar{padding:18px 10px}
+ .stats-sidebar #redac-stats p{font-size:12.5px;letter-spacing:-.25px;white-space:nowrap}
+}
