@@ -16,7 +16,7 @@ try {
  assert.equal(await page.locator('.side-card a').count(),2,'Liens synonymes et orthographe');
  assert.equal(await page.locator('.about').count(),0,'Section À propos supprimée');
  assert.equal(await page.locator('.editor-actions #print').count(),1,'PDF sous le cadre');
- assert.equal(await page.locator('.editor-actions .redac-links a').count(),2,'Liens sous le cadre');
+ assert.equal(await page.locator('.bottom-links a').count(),2,'Liens sous le cadre');
  assert.equal(await page.locator('.editor #print').count(),0,'Pas de bouton PDF dans le cadre');
  const columns=await page.evaluate(()=>{const ids=['.goals-sidebar','.editor','.stats-sidebar'];return ids.map(x=>document.querySelector(x).getBoundingClientRect().left)});
  assert.ok(columns[0]<columns[1]&&columns[1]<columns[2],'Ordre des trois colonnes');
