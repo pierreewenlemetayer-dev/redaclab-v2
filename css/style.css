@@ -207,3 +207,18 @@ h1{color:var(--texte)}
 .editor-actions .redac-links{margin:12px 0 0}
 @media(max-width:540px){.highlight-toggles{grid-template-columns:1fr}.highlight-toggles .highlight-toggle:last-child{grid-column:1}}
 @media print{.editor-actions{display:none!important}.editor-column{display:block!important}}
+
+/* Ajustement fin : trois options sur une ligne, rédaction élargie. */
+@media(min-width:1051px){
+ .workspace{grid-template-columns:205px minmax(0,1fr) 260px}
+ .stats-sidebar{padding:18px 12px}
+ .stats-sidebar #redac-stats p{font-size:13px;letter-spacing:-.2px;white-space:nowrap}
+}
+@media(min-width:541px){
+ .highlight-toggles{display:flex;flex-wrap:nowrap;justify-content:space-between;align-items:center;gap:7px}
+ .highlight-toggles .highlight-toggle{font-size:12px;white-space:nowrap;flex:0 0 auto;justify-content:flex-start}
+ .highlight-toggles .highlight-toggle:last-child{grid-column:auto;justify-self:auto}
+}
+@media(min-width:541px) and (max-width:800px){
+ .highlight-toggles{flex-wrap:wrap;justify-content:center}
+}
