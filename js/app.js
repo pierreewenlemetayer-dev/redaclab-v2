@@ -91,7 +91,7 @@ function renderHighlights(original){
  }
  const counts=new Map();
  for(const unit of units)if(!unit.excludeRepetition)counts.set(unit.key,(counts.get(unit.key)||0)+1);
- const mode=document.getElementById('repetition-enabled').checked?'repetition':document.getElementById('verbs-enabled').checked?'verbs':document.getElementById('longest-enabled').checked?'longest':document.getElementById('highlight-enabled').checked?'frequency':'none';
+ const mode=document.getElementById('repetition-enabled').checked?'repetition':document.getElementById('verbs-enabled').checked?'verbs':document.getElementById('longest-enabled').checked?'longest':'none';
  document.getElementById('repetitions').textContent=units.filter(unit=>!unit.excludeRepetition&&counts.get(unit.key)>1).length;
  const sentences=[...original.matchAll(/[^.!?]+(?:[.!?]+|$)/g)].filter(m=>m[0].trim());
  let longest=null,longestCount=0;
@@ -123,7 +123,8 @@ const tooltip=document.getElementById('word-tooltip');
 input.addEventListener('mousemove',event=>{
  if(repetitionToggle.checked){tooltip.hidden=true;highlightHoveredGroup(event);return;}
  clearHoveredGroup();
- if(!frequencyToggle.checked){tooltip.hidden=true;return;}
+ tooltip.hidden=true;return;
+ if(false){
  const layer=document.getElementById('highlight');
  let found=null;
  for(const span of layer.querySelectorAll('[data-frequency]')){
@@ -160,12 +161,12 @@ function highlightHoveredGroup(event){
  layer.classList.toggle('repeat-focus',found!==null);
  for(const span of layer.querySelectorAll('[data-repeat-key]'))span.classList.toggle('repeat-selected',found!==null&&span.dataset.repeatKey===found);
 }
-const frequencyToggle=document.getElementById('highlight-enabled');
+
 const repetitionToggle=document.getElementById('repetition-enabled');
 const verbsToggle=document.getElementById('verbs-enabled');
 const longestToggle=document.getElementById('longest-enabled');
 function updateMode(changed){
- const toggles={frequency:frequencyToggle,repetition:repetitionToggle,verbs:verbsToggle,longest:longestToggle};
+ const toggles={repetition:repetitionToggle,verbs:verbsToggle,longest:longestToggle};
  if(changed&&toggles[changed].checked)for(const [name,toggle] of Object.entries(toggles))if(name!==changed)toggle.checked=false;
  const enabled=Object.values(toggles).some(toggle=>toggle.checked);
  input.classList.toggle('highlight-on',enabled);
@@ -173,10 +174,10 @@ function updateMode(changed){
  hoveredRepeatKey=null;
  clearHoveredGroup();
  document.getElementById('highlight').hidden=!enabled;
- document.querySelector('.frequency-legend').hidden=!frequencyToggle.checked;
+
  if(enabled)renderHighlights(input.value);
 }
-frequencyToggle.addEventListener('change',()=>updateMode('frequency'));
+
 repetitionToggle.addEventListener('change',()=>updateMode('repetition'));
 verbsToggle.addEventListener('change',()=>updateMode('verbs'));
 longestToggle.addEventListener('change',()=>updateMode('longest'));
