@@ -150,3 +150,11 @@ h1{color:var(--texte)}
 @media(max-width:1050px){.workspace{grid-template-columns:185px minmax(0,1fr)}.stats-sidebar{grid-column:2}}
 @media(max-width:720px){.workspace{grid-template-columns:minmax(0,1fr)}.goals-sidebar,.stats-sidebar{grid-column:1}.editor{grid-row:2}.stats-sidebar{grid-row:3}.side-card{margin-bottom:12px}}
 @media print{.goals-sidebar,.stats-sidebar,.redac-links{display:none!important}.workspace{display:block!important}}
+
+/* Colonne statistique légèrement élargie, sans réduire le champ de rédaction. */
+@media(min-width:1051px){
+ main{max-width:1320px}
+ .workspace{grid-template-columns:205px minmax(0,1fr) 285px}
+ .stats-sidebar{padding:18px 16px}
+ .stats-sidebar #redac-stats p{white-space:nowrap;font-size:14px;letter-spacing:-.15px}
+}
