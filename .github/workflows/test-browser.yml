@@ -35,3 +35,12 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/redac-server.log 2>&1 &
           node tests/verification.mjs
+          node tests/visuel.mjs
+      - name: Conserver les captures et les PDF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: redaclab-v2-captures
+          path: artifacts/
+          if-no-files-found: ignore
+          retention-days: 14
