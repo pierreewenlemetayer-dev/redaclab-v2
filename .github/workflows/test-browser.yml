@@ -1,0 +1,37 @@
+name: Vérifications navigateur Redac Lab v2
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'css/**'
+      - 'js/**'
+      - 'data/**'
+      - 'tests/**'
+      - '.github/workflows/test-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  navigateur:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Installer Chromium et Playwright
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Vérifier la présence du dictionnaire
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/lexique.json',encoding='utf-8'))
+          assert len(d['entries']) >= 170000
+          print('Dictionnaire :',len(d['entries']),'entrées')
+          PY
+      - name: Exécuter les tests
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/redac-server.log 2>&1 &
+          node tests/verification.mjs
