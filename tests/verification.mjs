@@ -25,8 +25,8 @@ try {
  assert.equal(await page.locator('#verbs-enabled').isChecked(),false);
  assert.equal(await page.locator('#highlight .longest-sentence').count(),1);
  await page.locator('#nom').fill('Test');
- await page.locator('#save').click();
  page.once('dialog',d=>d.accept());
+ await page.locator('#save').click();
  await input.fill('Texte différent.');
  page.once('dialog',d=>d.accept());
  await page.locator('#load').click();
