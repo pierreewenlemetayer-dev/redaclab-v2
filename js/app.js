@@ -2,7 +2,7 @@ function demarrerLexiLab(LEXICON){
 let hoveredRepeatKey=null;
 const entries=LEXICON.entries, excluded=new Set(LEXICON.excluded);
 const apostrophes=/[’‘`´]/g;
-const repetitionExcluded=new Set(['le','la','les','l','un','une','des']);
+const repetitionExcluded=new Set(['le','la','les','l','un','une','des','de','du','au','aux','à']);
 const dullForms=new Set('être avoir faire dire suis es est sommes etes sont étais était étions étiez étaient serai seras sera serons serez seront fus fut fûmes fûtes furent ai as a avons avez ont avais avait avions aviez avaient aurai auras aura aurons aurez auront eus eut eûmes eûtes eurent fais fait faisons faites font faisais faisait faisions faisiez faisaient ferai feras fera ferons ferez feront fis fit fîmes fîtes firent dis dit disons dites disent disais disait disions disiez disaient dirai diras dira dirons direz diront dîmes dîtes dirent'.split(' '));
 
 function analyze(){
