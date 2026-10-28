@@ -129,3 +129,24 @@ button:hover{background:var(--accent-fonce);border-color:var(--accent-fonce)}
 #print-sheet{display:none}
 #load-error{color:#a12727;font-weight:600}
 @media print{body{background:white!important;color:black!important}header{padding:0!important}.workspace{display:block!important}.sidebar,.text-layer,.highlight-controls,.student-row,.print-button,.about,.site-footer{display:none!important}#print-sheet{display:block!important}#print-text{white-space:pre-wrap;overflow-wrap:anywhere;font:11pt/1.5 Arial,sans-serif}#print-stats{margin-top:1.5em;font:9pt/1.4 Arial,sans-serif}.editor{padding:0!important;box-shadow:none!important;border:0!important}}
+
+/* Disposition Redac Lab : objectifs à gauche, texte au centre, statistiques à droite. */
+:root{--fond:#f1f7fb;--papier:#fcfeff;--texte:#24313a;--secondaire:#667985;--accent:#6b9fbd;--accent-fonce:#477f9f;--accent-pale:#dcecf5;--bordure:#d1e0e8;--ombre:0 8px 25px rgba(45,75,95,.08)}
+h1{color:var(--texte)}
+.subtitle{color:var(--secondaire)}
+.workspace{grid-template-columns:205px minmax(0,1fr) 235px;gap:18px;align-items:start}
+.goals-sidebar{padding:0;background:transparent;box-shadow:none;border:0}
+.side-card{padding:20px;margin-bottom:18px}
+.side-card p{margin:14px 0 0}
+.side-card a,.redac-links a{color:var(--accent-fonce);font-weight:600;text-decoration:none}
+.side-card a:hover,.redac-links a:hover{text-decoration:underline}
+.stats-sidebar{padding:20px;min-width:0}
+.stats-sidebar .eyebrow,.goals-sidebar .eyebrow{font-size:15px;letter-spacing:0;text-transform:none}
+.stats-sidebar #redac-stats{margin-top:14px}
+.editor{min-width:0}
+.redac-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:18px 0 0}
+.redac-links a{border:1px solid var(--bordure);border-radius:10px;padding:10px 12px;font-size:13px;text-align:center}
+.redac-links a:hover{background:var(--accent-pale);text-decoration:none}
+@media(max-width:1050px){.workspace{grid-template-columns:185px minmax(0,1fr)}.stats-sidebar{grid-column:2}}
+@media(max-width:720px){.workspace{grid-template-columns:minmax(0,1fr)}.goals-sidebar,.stats-sidebar{grid-column:1}.editor{grid-row:2}.stats-sidebar{grid-row:3}.side-card{margin-bottom:12px}}
+@media print{.goals-sidebar,.stats-sidebar,.redac-links{display:none!important}.workspace{display:block!important}}
