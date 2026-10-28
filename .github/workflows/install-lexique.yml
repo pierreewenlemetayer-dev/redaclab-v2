@@ -21,12 +21,16 @@ jobs:
           assert len(d['entries']) >= 170000, 'Dictionnaire incomplet'
           assert len(d['excluded']) >= 300, 'Exclusions incomplètes'
           print('Entrées:',len(d['entries']),'Exclusions:',len(d['excluded']))
+          with open('data/exclusions-frequence.txt','w',encoding='utf-8') as out:
+            out.write('# Formes exclues de l’indice de fréquence (Lexi Lab)\\n')
+            out.write('# Liste issue du dictionnaire validé, sans effet sur la diversité lexicale.\\n')
+            out.write('\\n'.join(sorted(d['excluded']))+'\\n')
           PY
       - name: Enregistrer le dictionnaire dans ce dépôt
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/lexique.json
+          git add data/lexique.json data/exclusions-frequence.txt
           if ! git diff --cached --quiet; then
             git commit -m "Installer la copie autonome du dictionnaire Lexique 4"
             git push
