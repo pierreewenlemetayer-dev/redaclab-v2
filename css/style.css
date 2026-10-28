@@ -264,3 +264,8 @@ h1{color:var(--texte)}
   overflow-wrap:normal;
  }
 }
+
+/* Bordure supérieure explicite du tableau dans le PDF. */
+@media print{
+ #print-summary{border-top:1px solid #bcbcbc!important}
+}
