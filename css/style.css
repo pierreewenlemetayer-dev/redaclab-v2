@@ -236,3 +236,18 @@ h1{color:var(--texte)}
  .stats-sidebar{padding:18px 8px}
  .stats-sidebar #redac-stats p{font-size:11.5px;letter-spacing:-.3px;white-space:nowrap}
 }
+
+/* Tableau récapitulatif de l'impression, fidèle à la version initiale. */
+@media print{
+ #print-sheet{display:block!important}
+ #print-summary{width:100%;border:1px solid #bcbcbc;border-collapse:collapse;margin:22px 0 18px;font:10.5pt/1.35 Arial,Helvetica,sans-serif;table-layout:fixed}
+ #print-summary th,#print-summary td{padding:7px 8px;border:0;text-align:left;vertical-align:middle}
+ #print-summary th{font-weight:700}
+ #print-summary th:first-child,#print-summary td:first-child{width:46%}
+ #print-summary th:nth-child(2),#print-summary td:nth-child(2){width:20%;text-align:center}
+ #print-summary th:nth-child(3),#print-summary td:nth-child(3){width:34%;text-align:center}
+ #print-summary tr{break-inside:avoid}
+ #print-stats{margin-top:16px;font:10pt/1.4 Arial,Helvetica,sans-serif}
+ #print-stats strong{display:block;font-weight:700}
+ #print-stats-values{font-weight:400}
+}
