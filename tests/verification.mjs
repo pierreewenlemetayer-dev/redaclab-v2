@@ -9,6 +9,13 @@ try {
  await page.goto('http://127.0.0.1:8765/',{waitUntil:'load'});
  await page.waitForFunction(()=>document.querySelector('#mots')?.textContent==='0' && document.querySelector('#input')?.value==='',{timeout:30000});
  const input=page.locator('#input');
+ assert.equal(await page.locator('.goals-sidebar').count(),1,'Objectifs à gauche');
+ assert.equal(await page.locator('.stats-sidebar').count(),1,'Statistiques à droite');
+ assert.equal(await page.locator('.redac-links a').count(),2,'Liens Lañs et Leien');
+ assert.equal(await page.locator('.side-card a').count(),2,'Liens synonymes et orthographe');
+ assert.equal(await page.locator('.about').count(),0,'Section À propos supprimée');
+ const columns=await page.evaluate(()=>{const ids=['.goals-sidebar','.editor','.stats-sidebar'];return ids.map(x=>document.querySelector(x).getBoundingClientRect().left)});
+ assert.ok(columns[0]<columns[1]&&columns[1]<columns[2],'Ordre des trois colonnes');
  await input.fill('Le chat regarde les chats. Le chat regardait les chats.');
  await page.waitForTimeout(500);
  assert.equal(await page.locator('#repetitions').textContent(),'10','Le total inclut les occurrences de tous les groupes répétés (déterminants compris)');
