@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Redac Lab v2 — Outil d’écriture</title>
-<link rel="stylesheet" href="css/style.css?v=20261028-9"></head>
+<link rel="stylesheet" href="css/style.css?v=20261028-10"></head>
 <body>
 <header><h1>Redac Lab v2</h1><p class="subtitle">Outil d’écriture</p></header>
 <main><div class="workspace">
@@ -16,10 +16,7 @@
 </aside><div class="editor-column"><section class="panel editor"><label for="input" class="sr-only">Texte à analyser</label>
 <p id="load-error" role="alert" hidden></p><div class="student-row"><label for="nom">Élève :</label><input id="nom" placeholder="Nom"><button id="save">Sauvegarder</button><button id="load">Charger</button></div><div class="text-layer"><div id="word-tooltip" class="word-tooltip" role="tooltip" hidden></div><div id="highlight" class="highlight" aria-hidden="true"></div><textarea id="input" spellcheck="false" placeholder="Saisissez ou collez votre texte ici…"></textarea></div><div class="highlight-controls"><div class="highlight-toggles"><label class="highlight-toggle"><input type="checkbox" id="repetition-enabled"> Afficher les répétitions</label><label class="highlight-toggle"><input type="checkbox" id="verbs-enabled"> Afficher les verbes ternes</label><label class="highlight-toggle"><input type="checkbox" id="longest-enabled"> Souligner la phrase la plus longue</label></div></div>
 
-<div id="print-sheet"><p>Élève : <span id="print-name"></span></p><div id="print-text"></div><table id="print-summary" aria-label="Bilan des objectifs"><thead><tr><th>Critères</th><th>Objectifs</th><th>Valeurs obtenues</th></tr></thead><tbody><tr><td>Nombre de mots</td><td id="print-obj-mots"></td><td id="print-val-mots"></td></tr><tr><td>Moyenne de mots / phrase</td><td id="print-obj-moyenne"></td><td id="print-val-moyenne"></td></tr><tr><td>Diversité lexicale</td><td id="print-obj-diversite"></td><td id="print-val-diversite"></td></tr></tbody></table><div id="print-stats"><strong>Mes statistiques :</strong><div id="print-stats-values"></div></div></div></section><div class="editor-actions"><button id="print" class="print-button">Imprimer / enregistrer en PDF</button><nav class="redac-links" aria-label="Outils d'écriture complémentaires">
-<a href="https://pierreewenlemetayer-dev.github.io/lans/" target="_blank" rel="noopener noreferrer">Lañs – Histoires à inventer</a>
-<a href="https://pierreewenlemetayer-dev.github.io/leien/" target="_blank" rel="noopener noreferrer">Leien – Construire des histoires</a>
-</nav></div></div><aside class="panel stats-sidebar" aria-label="Statistiques"><div class="eyebrow">📊 Statistiques</div><div id="redac-stats" aria-live="polite">
+<div id="print-sheet"><p>Élève : <span id="print-name"></span></p><div id="print-text"></div><table id="print-summary" aria-label="Bilan des objectifs"><thead><tr><th>Critères</th><th>Objectifs</th><th>Valeurs obtenues</th></tr></thead><tbody><tr><td>Nombre de mots</td><td id="print-obj-mots"></td><td id="print-val-mots"></td></tr><tr><td>Moyenne de mots / phrase</td><td id="print-obj-moyenne"></td><td id="print-val-moyenne"></td></tr><tr><td>Diversité lexicale</td><td id="print-obj-diversite"></td><td id="print-val-diversite"></td></tr></tbody></table><div id="print-stats"><strong>Mes statistiques :</strong><div id="print-stats-values"></div></div></div></section><div class="editor-actions"><button id="print" class="print-button">Imprimer / enregistrer en PDF</button></div></div><aside class="panel stats-sidebar" aria-label="Statistiques"><div class="eyebrow">📊 Statistiques</div><div id="redac-stats" aria-live="polite">
 <p>Mots : <span class="stat-value"><strong id="mots">0</strong> <span id="motsCouleur"></span></span></p>
 <p>Moyenne mots / phrase : <span class="stat-value"><strong id="moyenne">0</strong> <span id="moyenneCouleur"></span></span></p>
 <p>Diversité lexicale : <span class="stat-value"><strong id="diversity-score">—</strong> <span id="densiteCouleur"></span></span></p>
@@ -27,10 +24,12 @@
 <p>Phrase la plus longue : <strong id="longue">0</strong></p>
 <p>Verbes ternes : <strong id="verbes">0</strong></p><p>Répétitions : <strong id="repetitions">0</strong></p>
 </div></aside></div>
+<section class="sentence-section panel" aria-label="Analyse des phrases"><h2>Analyse des phrases</h2><div class="sentence-scroll"><table class="sentence-table"><thead><tr><th scope="col">Mots</th><th scope="col">Phrase</th><th scope="col">Analyse</th></tr></thead><tbody id="sentence-rows"><tr><td colspan="3" class="sentence-empty">Saisissez un texte pour afficher les phrases.</td></tr></tbody></table></div></section>
+<nav class="bottom-links redac-links" aria-label="Outils d'écriture complémentaires"><a href="https://pierreewenlemetayer-dev.github.io/lans/" target="_blank" rel="noopener noreferrer">Lañs – Histoires à inventer</a><a href="https://pierreewenlemetayer-dev.github.io/leien/" target="_blank" rel="noopener noreferrer">Leien – Construire des histoires</a></nav>
 <footer class="site-footer">© Redac Lab – Pierre Lemétayer – 2026</footer>
 <div class="hidden-diagnostics" aria-hidden="true">
 <span id="score"></span><span id="marker"></span><span id="raw-index"></span><span id="lemmas"></span><span id="coverage"></span><span id="detail"></span>
 <table><tbody id="table"></tbody></table><span id="uniques"></span>
 </div></main>
-<script src="js/app.js?v=20261028-8"></script>
+<script src="js/app.js?v=20261028-10"></script>
 <script>fetch("data/lexique.json").then(r=>{if(!r.ok)throw Error("Dictionnaire indisponible");return r.json()}).then(demarrerLexiLab).catch(e=>{console.error(e);const note=document.getElementById("load-error");if(note){note.hidden=false;note.textContent="Le dictionnaire lexical est indisponible."}})</script></body></html>
