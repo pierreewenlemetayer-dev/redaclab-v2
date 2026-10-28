@@ -18,7 +18,7 @@ try {
  assert.ok(columns[0]<columns[1]&&columns[1]<columns[2],'Ordre des trois colonnes');
  await input.fill('Le chat regarde les chats. Le chat regardait les chats.');
  await page.waitForTimeout(500);
- assert.equal(await page.locator('#repetitions').textContent(),'10','Le total inclut les occurrences de tous les groupes répétés (déterminants compris)');
+ assert.equal(await page.locator('#repetitions').textContent(),'6','Le total exclut les articles et conserve les autres répétitions');
  await input.fill(Array(15).fill('chat').concat(Array(30).fill('maison')).join(' ') + '.');
  await page.waitForTimeout(500);
  assert.equal(await page.locator('#repetitions').textContent(),'45','15 + 30 occurrences répétées doivent donner 45');
@@ -26,7 +26,7 @@ try {
  await page.waitForTimeout(500);
  await page.locator('#repetition-enabled').check();
  assert.equal(await page.locator('#highlight-enabled').isChecked(),false,'Modes exclusifs');
- assert.equal(await page.locator('#highlight [data-repeat-key]').count(),10,'Toutes les occurrences des groupes répétés doivent être colorées');
+ assert.equal(await page.locator('#highlight [data-repeat-key]').count(),6,'Seules les occurrences lexicales répétées doivent être colorées');
  const chats=page.locator('#highlight [data-repeat-key]').filter({hasText:/^chats?$/i});
  assert.equal(await chats.count(),4,'Les quatre formes chat/chats doivent appartenir aux répétitions');
  assert.equal(new Set(await chats.evaluateAll(els=>els.map(el=>el.dataset.repeatKey))).size,1,'chat et chats doivent partager la même clé lexicale');
@@ -47,6 +47,10 @@ try {
  await page.waitForTimeout(500);
  assert.equal(await page.locator('#repetitions').textContent(),'2','Les articles sont exclus des répétitions');
  assert.equal(await page.locator('#highlight [data-repeat-key]').count(),2,'Seul chat est surligné');
+ await input.fill('de de du du au au aux aux à à et et.');
+ await page.waitForTimeout(500);
+ assert.equal(await page.locator('#repetitions').textContent(),'2','Seul et est compté parmi les mots grammaticaux testés');
+ assert.equal(await page.locator('#highlight [data-repeat-key]').count(),2,'Seul et est coloré');
  await input.fill("L'enfant et l'enfant. L'enfant.");
  await page.waitForTimeout(500);
  assert.equal(await page.locator('#highlight [data-repeat-key="forme:l"]').count(),0,"L élidé est exclu des répétitions");
