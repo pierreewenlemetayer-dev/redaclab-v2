@@ -54,10 +54,10 @@ function analyze(){
  document.getElementById('uniques').textContent=items.sort((a,b)=>a.lemma.localeCompare(b.lemma,'fr')).map(x=>`${x.lemma} (${x.pos})`).join(' · ')||'—';
 }
 function updateRedacStats(original,diversite){
- const words=original.trim()?original.trim().split(/\\s+/):[];
+ const words=original.trim()?original.trim().split(/\s+/):[];
  const sentences=original.split(/[.!?]+/).filter(x=>x.trim());
  const avg=sentences.length?words.length/sentences.length:0;
- const max=Math.max(0,...sentences.map(x=>x.trim().split(/\\s+/).filter(Boolean).length));
+ const max=Math.max(0,...sentences.map(x=>x.trim().split(/\s+/).filter(Boolean).length));
  const dull=words.filter(w=>dullForms.has(w.toLocaleLowerCase('fr'))).length;
  const set=(id,v)=>document.getElementById(id).textContent=v;
  set('mots',words.length);set('moyenne',avg.toFixed(1));set('paragraphes',original.split(/\n+/).filter(x=>x.trim()).length);
