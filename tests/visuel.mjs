@@ -31,6 +31,10 @@ try {
   await page.emulateMedia({media:'print'});
   await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));
   assert.equal(await page.locator('#print-sheet').isVisible(),true,'Document imprimable absent');
+  assert.equal(await page.locator('#print-text').textContent(),await input.inputValue(),'Le texte de l’élève doit être reproduit intégralement dans le PDF');
+  assert.equal(await page.locator('#print-text').isVisible(),true,'Texte de l’élève invisible à l’impression');
+  const borders=await page.locator('#print-summary').evaluate(el=>{const c=getComputedStyle(el);return [c.borderTopWidth,c.borderRightWidth,c.borderBottomWidth,c.borderLeftWidth]});
+  assert.ok(borders.every(x=>parseFloat(x)>=1),'Tableau PDF non fermé : '+borders.join(', '));
   await page.pdf({path:'artifacts/'+viewport.name+'-impression.pdf',format:'A4',printBackground:true});
   assert.deepEqual(errors,[],'Erreurs JavaScript : '+errors.join(', '));
   await page.close();
