@@ -251,3 +251,16 @@ h1{color:var(--texte)}
  #print-stats strong{display:block;font-weight:700}
  #print-stats-values{font-weight:400}
 }
+
+/* Colonnes latérales de largeur identique, sans miniaturiser les statistiques. */
+@media(min-width:1051px){
+ .workspace{grid-template-columns:205px minmax(0,1fr) 205px}
+ .stats-sidebar{padding:18px 10px}
+ .stats-sidebar #redac-stats p{
+  font-size:14px;
+  letter-spacing:normal;
+  white-space:normal;
+  line-height:1.45;
+  overflow-wrap:normal;
+ }
+}
