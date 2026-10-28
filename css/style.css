@@ -285,3 +285,12 @@ h1{color:var(--texte)}
  font-size:14px;
  margin-top:2px;
 }
+
+/* Impression : texte de l'élève toujours visible et tableau fermé sur quatre côtés. */
+@media print{
+ .editor-column,.editor,#print-sheet{display:block!important;height:auto!important;min-height:0!important;overflow:visible!important}
+ #print-text{display:block!important;visibility:visible!important;color:#000!important;-webkit-text-fill-color:#000!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;font:11pt/1.5 Arial,Helvetica,sans-serif!important;margin:14px 0 18px}
+ #print-summary{border-collapse:separate!important;border-spacing:0!important;border:1px solid #999!important;outline:0!important}
+ #print-summary thead,#print-summary tbody,#print-summary tr{visibility:visible!important}
+ #print-summary tr:last-child td{border-bottom:0!important}
+}
