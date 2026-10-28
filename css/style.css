@@ -229,3 +229,10 @@ h1{color:var(--texte)}
  .stats-sidebar{padding:18px 10px}
  .stats-sidebar #redac-stats p{font-size:12.5px;letter-spacing:-.25px;white-space:nowrap}
 }
+
+/* Colonne Statistiques proche de la largeur des Objectifs (205 px). */
+@media(min-width:1051px){
+ .workspace{grid-template-columns:205px minmax(0,1fr) 215px}
+ .stats-sidebar{padding:18px 8px}
+ .stats-sidebar #redac-stats p{font-size:11.5px;letter-spacing:-.3px;white-space:nowrap}
+}
