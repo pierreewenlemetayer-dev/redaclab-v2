@@ -123,23 +123,7 @@ const tooltip=document.getElementById('word-tooltip');
 input.addEventListener('mousemove',event=>{
  if(repetitionToggle.checked){tooltip.hidden=true;highlightHoveredGroup(event);return;}
  clearHoveredGroup();
- tooltip.hidden=true;return;
- if(false){
- const layer=document.getElementById('highlight');
- let found=null;
- for(const span of layer.querySelectorAll('[data-frequency]')){
-   for(const rect of span.getClientRects()){
-     if(event.clientX>=rect.left&&event.clientX<=rect.right&&event.clientY>=rect.top&&event.clientY<=rect.bottom){
-       found=span.dataset.frequency;break;
-     }
-   }
-   if(found)break;
- }
- if(!found){tooltip.hidden=true;return;}
- tooltip.textContent=found;tooltip.hidden=false;
- const bounds=input.getBoundingClientRect();
- tooltip.style.left=Math.min(event.clientX-bounds.left+12,bounds.width-tooltip.offsetWidth-4)+'px';
- tooltip.style.top=Math.max(0,event.clientY-bounds.top-34)+'px';
+ tooltip.hidden=true;
 });
 input.addEventListener('mouseleave',()=>{tooltip.hidden=true;clearHoveredGroup();});
 function clearHoveredGroup(){
