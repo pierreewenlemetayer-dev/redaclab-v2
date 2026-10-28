@@ -3,7 +3,7 @@ let hoveredRepeatKey=null;
 const entries=LEXICON.entries, excluded=new Set(LEXICON.excluded);
 const apostrophes=/[’‘`´]/g;
 const dullForms=new Set('suis es est sommes etes sont étais était étions étiez étaient serai seras sera serons serez seront fus fut fûmes fûtes furent ai as a avons avez ont avais avait avions aviez avaient aurai auras aura aurons aurez auront eus eut eûmes eûtes eurent fais fait faisons faites font faisais faisait faisions faisiez faisaient ferai feras fera ferons ferez feront fis fit fîmes fîtes firent dis dit disons dites disent disais disait disions disiez disaient dirai diras dira dirons direz diront dîmes dîtes dirent'.split(' '));
-const tokenize=s=>s.match(/[\p{L}]+(?:[-'][\p{L}]+)*/gu)||[];
+
 function analyze(){
  const original=document.getElementById('input').value;
  renderHighlights(original);
@@ -191,4 +191,5 @@ document.querySelectorAll('.sidebar input').forEach(el=>el.addEventListener('inp
 document.getElementById('save').addEventListener('click',()=>{const name=document.getElementById('nom').value.trim();if(!name){alert('Entre ton nom');return;}localStorage.setItem('redac_v2_'+name,input.value);alert('Texte sauvegardé !');});
 document.getElementById('load').addEventListener('click',()=>{const name=document.getElementById('nom').value.trim();const saved=localStorage.getItem('redac_v2_'+name);if(saved===null){alert('Aucun texte trouvé');return;}input.value=saved;analyze();updateMode();});
 document.getElementById('print').addEventListener('click',()=>window.print());
+window.addEventListener('beforeprint',()=>{document.getElementById('print-text').textContent=input.value;document.getElementById('print-name').textContent=document.getElementById('nom').value;document.getElementById('print-stats').textContent=[...document.querySelectorAll('#redac-stats p')].map(p=>p.textContent.trim()).join(' · ');});
 }
