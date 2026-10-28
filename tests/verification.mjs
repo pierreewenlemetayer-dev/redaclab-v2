@@ -11,7 +11,7 @@ try {
  const input=page.locator('#input');
  await input.fill('Le chat regarde les chats. Le chat regardait les chats.');
  await page.waitForTimeout(500);
- assert.equal(await page.locator('#repetitions').textContent(),'4','Le regroupement lexical doit compter les quatre occurrences de chat/chats');
+ assert.equal(await page.locator('#repetitions').textContent(),'10','Le total inclut les occurrences de tous les groupes répétés (déterminants compris)');
  await input.fill(Array(15).fill('chat').concat(Array(30).fill('maison')).join(' ') + '.');
  await page.waitForTimeout(500);
  assert.equal(await page.locator('#repetitions').textContent(),'45','15 + 30 occurrences répétées doivent donner 45');
@@ -19,7 +19,10 @@ try {
  await page.waitForTimeout(500);
  await page.locator('#repetition-enabled').check();
  assert.equal(await page.locator('#highlight-enabled').isChecked(),false,'Modes exclusifs');
- assert.equal(await page.locator('#highlight [data-repeat-key]').count(),4,'Les quatre occurrences doivent être colorées');
+ assert.equal(await page.locator('#highlight [data-repeat-key]').count(),10,'Toutes les occurrences des groupes répétés doivent être colorées');
+ const chats=page.locator('#highlight [data-repeat-key]').filter({hasText:/^chats?$/i});
+ assert.equal(await chats.count(),4,'Les quatre formes chat/chats doivent appartenir aux répétitions');
+ assert.equal(new Set(await chats.evaluateAll(els=>els.map(el=>el.dataset.repeatKey))).size,1,'chat et chats doivent partager la même clé lexicale');
  await page.locator('#repetition-enabled').uncheck();
  assert.equal(await page.locator('#highlight').isHidden(),true,'Tous les modes peuvent être désactivés');
  await page.locator('#verbs-enabled').check();
