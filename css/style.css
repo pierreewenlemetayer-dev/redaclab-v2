@@ -269,3 +269,8 @@ h1{color:var(--texte)}
 @media print{
  #print-summary{border-top:1px solid #bcbcbc!important}
 }
+
+/* Les trois indicateurs principaux : intitulé puis résultat et feu sur la ligne suivante. */
+#redac-stats p:nth-child(-n+3){line-height:1.5}
+#redac-stats p:nth-child(-n+3) strong{display:inline-block;margin-left:0}
+#redac-stats p:nth-child(-n+3)::first-line{font-weight:400}
