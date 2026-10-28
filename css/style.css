@@ -125,3 +125,7 @@ button:hover{background:var(--accent-fonce);border-color:var(--accent-fonce)}
 .highlight .dull-verb{background:#B9D3E2}
 .highlight .longest-sentence{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 @media print{.sidebar,.highlight-controls,.student-row,.print-button,.about,.site-footer{display:none!important}.workspace{display:block}.editor{border:0;box-shadow:none}.text-layer textarea{color:var(--texte)!important;-webkit-text-fill-color:var(--texte)!important}.text-layer .highlight{display:none!important}}
+
+#print-sheet{display:none}
+#load-error{color:#a12727;font-weight:600}
+@media print{body{background:white!important;color:black!important}header{padding:0!important}.workspace{display:block!important}.sidebar,.text-layer,.highlight-controls,.student-row,.print-button,.about,.site-footer{display:none!important}#print-sheet{display:block!important}#print-text{white-space:pre-wrap;overflow-wrap:anywhere;font:11pt/1.5 Arial,sans-serif}#print-stats{margin-top:1.5em;font:9pt/1.4 Arial,sans-serif}.editor{padding:0!important;box-shadow:none!important;border:0!important}}
