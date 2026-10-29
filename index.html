@@ -32,5 +32,5 @@
 <span id="score"></span><span id="marker"></span><span id="raw-index"></span><span id="lemmas"></span><span id="coverage"></span><span id="detail"></span>
 <table><tbody id="table"></tbody></table><span id="uniques"></span>
 </div></main>
-<script src="js/app.js?v=20261028-10"></script>
+<script src="js/app.js?v=20261029-diversite-normalisee"></script>
 <script>fetch("data/lexique.json").then(r=>{if(!r.ok)throw Error("Dictionnaire indisponible");return r.json()}).then(demarrerLexiLab).catch(e=>{console.error(e);const note=document.getElementById("load-error");if(note){note.hidden=false;note.textContent="Le dictionnaire lexical est indisponible."}})</script></body></html>
