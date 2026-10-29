@@ -20,7 +20,7 @@ function analyze(){
      unitesDiversite.push(hit?'lemme:'+hit[0]+'|'+hit[1]:'forme:'+partie);
    }
  }
- const diversite=unitesDiversite.length?new Set(unitesDiversite).size/unitesDiversite.length*100:0;
+ const diversite=unitesDiversite.length>1?(new Set(unitesDiversite).size-1)/(unitesDiversite.length-1)*100:0;
  document.getElementById('diversity-score').textContent=unitesDiversite.length?diversite.toLocaleString('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1})+' %':'—';
  updateRedacStats(original,diversite);
  renderSentenceTable(original);
