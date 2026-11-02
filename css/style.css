@@ -315,6 +315,24 @@ h1{color:#477f9f}
 .sentence-actions label{display:flex;align-items:center;gap:5px;font-size:12px;line-height:1.4;white-space:nowrap;cursor:pointer;margin:0 0 8px}
 .sentence-actions input{accent-color:var(--accent-fonce);margin:0}
 .sentence-mark{border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+/* Même palette pour les répétitions de l'analyse phrase par phrase. */
+.sentence-mark.repeat-color-0{background:#B9D9FA}
+.sentence-mark.repeat-color-1{background:#FFCFA8}
+.sentence-mark.repeat-color-2{background:#BDE6C0}
+.sentence-mark.repeat-color-3{background:#F3B9D4}
+.sentence-mark.repeat-color-4{background:#D6C5FA}
+.sentence-mark.repeat-color-5{background:#B2E6E2}
+.sentence-mark.repeat-color-6{background:#F8E39B}
+.sentence-mark.repeat-color-7{background:#C5D3E3}
+.sentence-mark.repeat-color-8{background:#F6C2B2}
+.sentence-mark.repeat-color-9{background:#D8E7A9}
+.sentence-mark.repeat-color-10{background:#D1B5E7}
+.sentence-mark.repeat-color-11{background:#A9D5C6}
+.sentence-mark.repeat-color-12{background:#F2B8A1}
+.sentence-mark.repeat-color-13{background:#B4C8F3}
+.sentence-mark.repeat-color-14{background:#E6CFA7}
+.sentence-mark.repeat-color-15{background:#E4BFC9}
 .sentence-mark.freq-very-common{background:#BDECC5}
 .sentence-mark.freq-common{background:#FFF0A0}
 .sentence-mark.freq-uncommon{background:#FFD09B}
