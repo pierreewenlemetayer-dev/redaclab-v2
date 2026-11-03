@@ -94,7 +94,7 @@ function renderSentenceTable(original){
   const mode=sentenceModes[i]||'';
   const units=sentenceUnits(phrase);
   let html='',last=0;
-  const labels={'freq-very-common':'Mot très courant','freq-common':'Mot courant','freq-uncommon':'Mot rare','freq-rare':'Mot très rare'};
+  const labels={'freq-very-common':'Très courant','freq-common':'Courant','freq-uncommon':'Peu courant','freq-rare':'Rare'};
   for(const unit of units){
    html+=esc(phrase.slice(last,unit.start));
    const cls=mode==='vocab'?unit.frequencyClass:mode==='repeat'&&!unit.excluded&&counts.get(unit.key)>1?'repeat-color-'+colors.get(unit.key):'';
@@ -162,7 +162,7 @@ function renderHighlights(original){
    result+=esc(original.slice(last,unit.start));
    const cls=mode==='repetition'?(!unit.excludeRepetition&&counts.get(unit.key)>1?'repeat-color-'+colorByKey.get(unit.key):''):mode==='verbs'?(dullForms.has(normalized.slice(unit.start,unit.end))?'dull-verb':''):mode==='frequency'?unit.frequencyClass:'';
    const visible=esc(original.slice(unit.start,unit.end));
-   result+=cls?'<span class="'+cls+'"'+(mode==='frequency'?' data-frequency="'+(cls==='freq-very-common'?'Très fréquent':cls==='freq-common'?'Fréquent':cls==='freq-uncommon'?'Peu fréquent':'Rare')+'"':' data-repeat-key="'+esc(unit.key)+'"')+'>'+visible+'</span>':visible;
+   result+=cls?'<span class="'+cls+'"'+(mode==='frequency'?' data-frequency="'+(cls==='freq-very-common'?'Très courant':cls==='freq-common'?'Courant':cls==='freq-uncommon'?'Peu courant':'Rare')+'"':' data-repeat-key="'+esc(unit.key)+'"')+'>'+visible+'</span>':visible;
    last=unit.end;
  }
  result+=esc(original.slice(last));
