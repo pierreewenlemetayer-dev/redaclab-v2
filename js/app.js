@@ -23,7 +23,7 @@ function analyze(){
  const diversite=unitesDiversite.length>1?(new Set(unitesDiversite).size-1)/(unitesDiversite.length-1)*100:0;
  document.getElementById('diversity-score').textContent=unitesDiversite.length?diversite.toLocaleString('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1})+' %':'—';
  updateRedacStats(original,diversite);
- renderSentenceTable(original);
+ if(!editingSentence)renderSentenceTable(original);
  const raw=original.toLocaleLowerCase('fr').replace(apostrophes,"'");
  const tokens=raw.match(/[\p{L}]+(?:[-'][\p{L}]+)*/gu)||[];
  const records=[], unknown=[], dropped=[];const unique=new Map();
@@ -59,7 +59,21 @@ function analyze(){
 const sentenceModes=[];
 function sentenceParts(text){
  // Conserver les ponctuations et les fins de phrases sans perdre les retours à la ligne.
- return [...text.matchAll(/[^.!?]+(?:[.!?]+|$)/g)].map(m=>m[0].trim()).filter(Boolean);
+ return sentenceRanges(text).map(p=>p.text.trim()).filter(Boolean);
+}
+function sentenceRanges(text){
+ return [...text.matchAll(/[^.!?]+(?:[.!?]+|$)/g)].filter(m=>m[0].trim()).map(m=>({start:m.index,end:m.index+m[0].length,text:m[0]}));
+}
+let editingSentence=null;
+function syncSentenceEdit(field){
+ const source=document.getElementById('input'),range=editingSentence;
+ if(!range)return;
+ const start=range.start,end=range.end;
+ const scroll=source.scrollTop;
+ source.value=source.value.slice(0,start)+field.value+source.value.slice(end);
+ source.scrollTop=scroll;
+ range.end=start+field.value.length;
+ analyze();
 }
 function sentenceUnits(text){
  const normalized=text.toLocaleLowerCase('fr').replace(apostrophes,"'");
@@ -80,7 +94,7 @@ function sentenceUnits(text){
 }
 function renderSentenceTable(original){
  const tbody=document.getElementById('sentence-rows');if(!tbody)return;
- const phrases=sentenceParts(original);
+ const ranges=sentenceRanges(original),phrases=ranges.map(p=>p.text.trim());
  const allUnits=sentenceUnits(original),counts=new Map();
  for(const unit of allUnits)if(!unit.excluded)counts.set(unit.key,(counts.get(unit.key)||0)+1);
  const repeated=[...counts].filter(([,n])=>n>1).map(([k])=>k);
@@ -103,6 +117,24 @@ function renderSentenceTable(original){
    last=unit.end;
   }
   content.innerHTML=html+esc(phrase.slice(last));
+  content.tabIndex=0;content.setAttribute('role','button');
+  content.setAttribute('aria-label','Modifier la phrase '+(i+1));
+  const edit=()=>{
+   if(editingSentence)return;
+   const range=ranges[i],field=document.createElement('textarea');
+   field.className='sentence-editor';field.setAttribute('aria-label','Modifier la phrase '+(i+1));
+   field.spellcheck=false;field.value=range.text;
+   editingSentence={start:range.start,end:range.end};
+   content.replaceChildren(field);
+   field.rows=Math.max(2,Math.min(8,field.value.split('\n').length+1));
+   field.addEventListener('input',()=>syncSentenceEdit(field));
+   field.addEventListener('blur',()=>{editingSentence=null;analyze();updateMode();});
+   field.addEventListener('keydown',e=>{if(e.key==='Escape')field.blur()});
+   field.focus();
+  };
+  content.addEventListener('click',e=>{if(e.target===content||e.target.closest('.sentence-mark'))edit()});
+  content.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!editingSentence){e.preventDefault();edit()}});
+
   actions.className='sentence-actions';
   for(const [value,label] of [['vocab','Richesse du vocabulaire'],['repeat','Répétitions']]){
    const wrap=document.createElement('label'),checkbox=document.createElement('input');
